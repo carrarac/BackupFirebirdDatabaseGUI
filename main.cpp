@@ -64,7 +64,7 @@ class Frame : public wxFrame
             new wxStaticText(pnl, wxID_ANY, wxT("Núcleos"), wxPoint(420, 20), wxSize(-1, -1));
             campoNucleos = new wxTextCtrl(pnl, wxID_ANY, "1", wxPoint(420, 40), wxSize(60, -1));
 
-            chkRemoto = new wxCheckBox(pnl, wxID_ANY, "Backup remoto (backup será criado no servidor)", wxPoint(330, 240));
+            chkRemoto = new wxCheckBox(pnl, wxID_ANY, wxT("Backup remoto (backup será criado no servidor)"), wxPoint(330, 240));
 
             radioFirebirdVers = new wxRadioBox(pnl, wxID_ANY, wxT("Versão do Firebird"),
                             wxPoint(330, 130), wxSize(-1, -1), opcoes, 1, wxRA_SPECIFY_COLS);
