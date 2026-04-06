@@ -7,6 +7,7 @@ class Frame : public wxFrame
 {
     private:
     wxPanel *pnl;
+    wxCheckBox *chkRemoto;
     wxButton *btnExecutar, *btnDestinoFDB;
     wxRadioBox *radioFirebirdVers;
     wxTextCtrl *campoIp, *campoPorta, *campoBD, *campoUsuario, *campoSenha, *campoNucleos, *campoDestino;
@@ -62,6 +63,8 @@ class Frame : public wxFrame
 
             new wxStaticText(pnl, wxID_ANY, wxT("Núcleos"), wxPoint(420, 20), wxSize(-1, -1));
             campoNucleos = new wxTextCtrl(pnl, wxID_ANY, "1", wxPoint(420, 40), wxSize(60, -1));
+
+            chkRemoto = new wxCheckBox(pnl, wxID_ANY, "Backup remoto (backup será criado no servidor)", wxPoint(330, 240));
 
             radioFirebirdVers = new wxRadioBox(pnl, wxID_ANY, wxT("Versão do Firebird"),
                             wxPoint(330, 130), wxSize(-1, -1), opcoes, 1, wxRA_SPECIFY_COLS);
@@ -148,54 +151,108 @@ class Frame : public wxFrame
                     }
                 }
 
-                switch(radioFirebirdVers->GetSelection()){
-                    case 0:
-                        comando = wxString::Format(
-                                    "\"C:/Program Files/Firebird/Firebird_3_0/gbak.exe\""
-                                    " -b "
-                                    "-user %s -password %s "
-                                    " \"%s/%s:%s\""
-                                    " \"%s\"",
-                                    campoUsuario->GetValue(),
-                                    campoSenha->GetValue(),
-                                    campoIp->GetValue(),
-                                    campoPorta->GetValue(),
-                                    campoBD->GetValue(),
-                                    campoDestino->GetValue()
-                                );
-                    break;
-                    case 1:
-                        comando = wxString::Format(
-                                    "\"C:/Program Files/Firebird/Firebird_4_0/gbak.exe\""
-                                    " -b -zip "
-                                    "-user %s -password %s "
-                                    " \"%s/%s:%s\""
-                                    " \"%s\"",
-                                    campoUsuario->GetValue(),
-                                    campoSenha->GetValue(),
-                                    campoIp->GetValue(),
-                                    campoPorta->GetValue(),
-                                    campoBD->GetValue(),
-                                    campoDestino->GetValue()
-                                );
-                    break;
-                    case 2:
-                        comando = wxString::Format(
-                                    "\"C:/Program Files/Firebird/Firebird_5_0/gbak.exe\""
-                                    " -b -zip -par %s "
-                                    "-user %s -password %s "
-                                    " \"%s/%s:%s\""
-                                    " \"%s\"",
-                                    campoNucleos->GetValue(),
-                                    campoUsuario->GetValue(),
-                                    campoSenha->GetValue(),
-                                    campoIp->GetValue(),
-                                    campoPorta->GetValue(),
-                                    campoBD->GetValue(),
-                                    campoDestino->GetValue()
-                                );
-                    break;
-                    default: break;
+                if(chkRemoto->GetValue()){
+                    switch(radioFirebirdVers->GetSelection()){
+                        case 0:
+                            comando = wxString::Format(
+                                "\"C:/Program Files/Firebird/Firebird_3_0/gbak.exe\""
+                                " -b -se %s/%s:service_mgr "
+                                "-user %s -password %s "
+                                " \"%s\""
+                                " \"%s\"",
+                                campoIp->GetValue(),
+                                campoPorta->GetValue(),
+                                campoUsuario->GetValue(),
+                                campoSenha->GetValue(),
+                                campoBD->GetValue(),
+                                campoDestino->GetValue()
+                            );
+                            break;
+                        case 1:
+                            comando = wxString::Format(
+                                "\"C:/Program Files/Firebird/Firebird_4_0/gbak.exe\""
+                                " -b -zip -se %s/%s:service_mgr "
+                                "-user %s -password %s "
+                                " \"%s\""
+                                " \"%s\"",
+                                campoIp->GetValue(),
+                                campoPorta->GetValue(),
+                                campoUsuario->GetValue(),
+                                campoSenha->GetValue(),
+                                campoBD->GetValue(),
+                                campoDestino->GetValue()
+                            );
+                            break;
+                        case 2:
+                            comando = wxString::Format(
+                                "\"C:/Program Files/Firebird/Firebird_5_0/gbak.exe\""
+                                " -b -zip -par %s -se %s/%s:service_mgr "
+                                "-user %s -password %s "
+                                " \"%s\""
+                                " \"%s\"",
+                                campoNucleos->GetValue(),
+                                campoIp->GetValue(),
+                                campoPorta->GetValue(),
+                                campoUsuario->GetValue(),
+                                campoSenha->GetValue(),
+                                campoBD->GetValue(),
+                                campoDestino->GetValue()
+                            );
+                            break;
+                        default: break;
+                    }
+                }
+                else
+                {
+                    switch(radioFirebirdVers->GetSelection()){
+                        case 0:
+                            comando = wxString::Format(
+                                        "\"C:/Program Files/Firebird/Firebird_3_0/gbak.exe\""
+                                        " -b "
+                                        "-user %s -password %s "
+                                        " \"%s/%s:%s\""
+                                        " \"%s\"",
+                                        campoUsuario->GetValue(),
+                                        campoSenha->GetValue(),
+                                        campoIp->GetValue(),
+                                        campoPorta->GetValue(),
+                                        campoBD->GetValue(),
+                                        campoDestino->GetValue()
+                                    );
+                        break;
+                        case 1:
+                            comando = wxString::Format(
+                                        "\"C:/Program Files/Firebird/Firebird_4_0/gbak.exe\""
+                                        " -b -zip "
+                                        "-user %s -password %s "
+                                        " \"%s/%s:%s\""
+                                        " \"%s\"",
+                                        campoUsuario->GetValue(),
+                                        campoSenha->GetValue(),
+                                        campoIp->GetValue(),
+                                        campoPorta->GetValue(),
+                                        campoBD->GetValue(),
+                                        campoDestino->GetValue()
+                                    );
+                        break;
+                        case 2:
+                            comando = wxString::Format(
+                                        "\"C:/Program Files/Firebird/Firebird_5_0/gbak.exe\""
+                                        " -b -zip -par %s "
+                                        "-user %s -password %s "
+                                        " \"%s/%s:%s\""
+                                        " \"%s\"",
+                                        campoNucleos->GetValue(),
+                                        campoUsuario->GetValue(),
+                                        campoSenha->GetValue(),
+                                        campoIp->GetValue(),
+                                        campoPorta->GetValue(),
+                                        campoBD->GetValue(),
+                                        campoDestino->GetValue()
+                                    );
+                        break;
+                        default: break;
+                    }
                 }
                 
                 wxArrayString saida, erro;
